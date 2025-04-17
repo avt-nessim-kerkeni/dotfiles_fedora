@@ -4,7 +4,11 @@
 
 # Initialize completion system
 autoload -Uz compinit
-compinit -d "$ZSH_CACHE/zcompdump"
+if [[ -n ${ZDOTDIR:-${HOME}}/.zcompdump(#qN.mh+24) ]]; then
+  compinit -d "$ZSH_CACHE/zcompdump"
+else
+  compinit -C -d "$ZSH_CACHE/zcompdump"
+fi
 
 # Basic completion options
 setopt COMPLETE_IN_WORD      # Complete from both ends of a word
@@ -13,19 +17,22 @@ setopt AUTO_LIST             # Automatically list choices on an ambiguous comple
 setopt AUTO_MENU             # Show completion menu on second tab press
 setopt AUTO_PARAM_SLASH      # Add a trailing slash for completed directories
 setopt NO_COMPLETE_ALIASES   # Complete the aliased command, not the alias
+setopt LIST_PACKED           # Make completion lists more densely packed
+setopt MENU_COMPLETE         # Automatically select the first match
 
-# Completion styling
+# Completion styling with fat separators
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' special-dirs true
 zstyle ':completion:*' verbose true
 
-# Completion formatting
-zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
-zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
-zstyle ':completion:*:*:*:*:warnings' format '%F{red}-- no matches found --%f'
-zstyle ':completion:*:*:*:*:messages' format '%F{purple}-- %d --%f'
+# Enhanced completion formatting with fat separators
+zstyle ':completion:*:*:*:*:descriptions' format '%F{green}%B━━━━━━ %d ━━━━━━%b%f'
+zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}%B━━━━━━ %d (errors: %e) ━━━━━━%b%f'
+zstyle ':completion:*:*:*:*:warnings' format '%F{red}%B━━━━━━ no matches found ━━━━━━%b%f'
+zstyle ':completion:*:*:*:*:messages' format '%F{purple}%B━━━━━━ %d ━━━━━━%b%f'
+zstyle ':completion:*:default' list-prompt '%S%M matches%s'
 
 # Group completions by category
 zstyle ':completion:*' group-name ''
@@ -51,6 +58,11 @@ zstyle ':completion:*:(ssh|scp|sftp|rsh|rsync):hosts' hosts 'reply=(${=${${(f)"$
 zstyle ':completion:*' accept-exact '*(N)'
 zstyle ':completion:*' accept-exact-dirs true
 zstyle ':completion:*' use-ip true
+zstyle ':completion:*' completer _extensions _complete _approximate
+
+# Make approximate matching more helpful
+zstyle ':completion:*:approximate:*' max-errors 1 numeric
+zstyle ':completion:*' squeeze-slashes true
 
 # Don't complete uninteresting users
 zstyle ':completion:*:*:*:users' ignored-patterns \
@@ -62,5 +74,39 @@ zstyle ':completion:*:*:*:users' ignored-patterns \
   operator pcap postfix postgres privoxy pulse pvm quagga radvd \
   rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs
 
-# Keybinding for auto-completion
-bindkey '^ ' autosuggest-accept
+#==============================================================================
+# ZSH Autosuggestions Configuration
+#==============================================================================
+
+# Install zsh-autosuggestions if not already installed
+if [[ ! -d ${ZDOTDIR:-$HOME}/.zsh/zsh-autosuggestions ]]; then
+  echo "Installing zsh-autosuggestions..."
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZDOTDIR:-$HOME}/.zsh/zsh-autosuggestions
+fi
+
+# Source zsh-autosuggestions
+source ${ZDOTDIR:-$HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Configure autosuggestions
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#8a8a8a,bold"
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_USE_ASYNC=true
+ZSH_AUTOSUGGEST_MANUAL_REBIND=true
+ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd *|ls *|exit"
+
+# Navigation keybindings for completion menu
+bindkey '^[[A' up-line-or-search                  # Up arrow - search history backwards
+bindkey '^[[B' down-line-or-search                # Down arrow - search history forwards
+bindkey '^[[1;5A' up-line-or-beginning-search     # Ctrl+Up - smarter history search backwards
+bindkey '^[[1;5B' down-line-or-beginning-search   # Ctrl+Down - smarter history search forwards
+bindkey '^[[Z' reverse-menu-complete              # Shift+Tab - go backwards in menu
+
+# Menu completion navigation
+bindkey '^N' menu-complete                        # Ctrl+N - next completion
+bindkey '^P' reverse-menu-complete                # Ctrl+P - previous completion
+
+# Autosuggestion key bindings
+bindkey '^ ' autosuggest-accept                   # Ctrl+Space - accept suggestion
+bindkey '^F' autosuggest-accept                   # Ctrl+F - accept suggestion
+bindkey '^E' autosuggest-execute                  # Ctrl+E - execute suggestion
