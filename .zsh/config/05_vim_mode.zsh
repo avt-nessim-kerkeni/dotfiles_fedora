@@ -34,16 +34,16 @@ function zvm_after_init() {
   bindkey -M viins '^E' autosuggest-accept   # Ctrl+E
   bindkey -M viins '^P' history-beginning-search-backward
   bindkey -M viins '^N' history-beginning-search-forward
-  
+
   # Normal mode specific bindings
   zvm_bindkey normal '^[[A' history-beginning-search-backward
   zvm_bindkey normal '^[[B' history-beginning-search-forward
   zvm_bindkey normal '^R' fzf-history-widget
-  
+
   # Quick movement keys
   zvm_bindkey normal 'H' beginning-of-line
   zvm_bindkey normal 'L' end-of-line
-  
+
   # Surround functionality (similar to vim-surround)
   zvm_define_widget surround_quotes
   function surround_quotes() {

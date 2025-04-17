@@ -15,7 +15,7 @@ function clipboard() {
     printf "\e]52;c;%s\a" "$data"
   fi
 }
-
+alias cb=clipboard
 # Extract function - handle various archive types
 function extract() {
   if [ -f $1 ] ; then

@@ -26,7 +26,7 @@ export PATH
 
 # Oh My Zsh Plugin Configuration
 plugins=(
-  zsh-vi-mode
+  # zsh-vi-mode
   git
   zsh-autosuggestions
   zsh-syntax-highlighting
@@ -43,9 +43,6 @@ done
 source $ZSH/oh-my-zsh.sh
 
 eval "$(zoxide init zsh)"
-function z() {
-  zoxide "$@"
-}
 
 unalias ls 2>/dev/null
 function ls() {
