@@ -1,67 +1,49 @@
 return {
   "echasnovski/mini.starter",
+  version = "*",
   event = "VimEnter",
   opts = function()
     local starter = require("mini.starter")
+    local items = {
+      { name = "Edit init.lua", action = "e $MYVIMRC", section = "Config" },
+      { name = "Config 📁", action = "e $HOME/.config/nvim", section = "Projects" },
+      { name = "ApprenTIM 📁", action = "e $HOME/ApprenTIM_v_0", section = "Projects" },
+      { name = "Update Plugins ⟳", action = "Lazy update", section = "System" },
+      { name = "Quit Neovim", action = "qa", section = "Session" },
+    }
 
     return {
-      -- Header with ASCII art or a custom greeting
+      -- Your ASCII art header
       header = table.concat({
-        [[███╗   ██╗███████╗██╗   ██╗██╗███╗   ███╗]],
-        [[████╗  ██║██╔════╝██║   ██║██║████╗ ████║]],
-        [[██╔██╗ ██║█████╗  ██║   ██║██║██╔████╔██║]],
-        [[██║╚██╗██║██╔══╝  ╚██╗ ██╔╝██║██║╚██╔╝██║]],
-        [[██║ ╚████║███████╗ ╚████╔╝ ██║██║ ╚═╝ ██║]],
-        [[╚═╝  ╚═══╝╚══════╝  ╚═══╝  ╚═╝╚═╝     ╚═╝]],
+        [[▓██   ██▓ █    ██  █    ██    ▄████ ▓█████ ███▄    █ ]],
+        [[ ▒██  ██▒ ██  ▓██▒ ██  ▓██▒▒ ██▒ ▀█▒▓█   ▀ ██ ▀█   █ ]],
+        [[  ▒██ ██░▓██  ▒██░▓██  ▒██░░▒██░▄▄▄░▒███  ▓██  ▀█ ██▒]],
+        [[  ░ ▐██▓░▓▓█  ░██░▓▓█  ░██░░░▓█  ██▓▒▓█  ▄▓██▒  ▐▌██▒]],
+        [[  ░ ██▒▓░▒▒█████▓ ▒▒█████▓ ░▒▓███▀▒░░▒████▒██░   ▓██░]],
+        [[   ██▒▒▒  ▒▓▒ ▒ ▒  ▒▓▒ ▒ ▒  ░▒   ▒  ░░ ▒░ ░ ▒░   ▒ ▒ ]],
+        [[ ▓██ ░▒░  ░▒░ ░ ░  ░▒░ ░ ░   ░   ░   ░ ░  ░ ░░   ░ ▒░]],
+        [[ ▒ ▒ ░░    ░░ ░ ░   ░░ ░ ░ ░ ░   ░ ░   ░     ░   ░ ░ ]],
+        [[ ░ ░        ░        ░           ░     ░           ░ ]],
       }, "\n"),
 
-      -- Items to show on the start screen
-      items = {
-        starter.sections.builtin_actions(),
-        starter.sections.recent_files(5, true),
-        starter.sections.sessions(5, true),
-        {
-          name = "Update Plugins",
-          action = "Lazy update",
-          section = "Plugins",
-        },
-        {
-          name = "Check Health",
-          action = "checkhealth",
-          section = "Utils",
-        },
-        {
-          name = "Quit Neovim",
-          action = "qa",
-          section = "Utils",
-        },
-      },
+      items = items,
 
-      -- Footer with a custom message
-      footer = "🚀 Happy Hacking with Neovim + Mini Starter",
+      -- Add just the footer
+      footer = "✨ Yuu-Gen Neovim",
 
-      -- Content hooks
       content_hooks = {
-        starter.gen_hook.adding_bullet("󰄾 ", false),
         starter.gen_hook.aligning("center", "center"),
       },
     }
   end,
-
   config = function(_, opts)
     require("mini.starter").setup(opts)
 
-    -- Optional: show starter screen instead of Neo-tree when opening directory
-    vim.api.nvim_create_autocmd("VimEnter", {
-      callback = function()
-        local arg = vim.fn.argv()[1]
-        if arg and vim.fn.isdirectory(arg) == 1 then
-          vim.cmd("enew")
-          vim.cmd("silent! %bwipeout")
-          require("mini.starter").open()
-        end
-      end,
-    })
+    -- Apply Catppuccin Mocha highlight tweaks for MiniStarter
+    vim.api.nvim_set_hl(0, "MiniStarterHeader", { fg = "#f5e0dc" }) -- Rosewater
+    vim.api.nvim_set_hl(0, "MiniStarterItem", { fg = "#cdd6f4" })  -- Text
+    vim.api.nvim_set_hl(0, "MiniStarterSection", { fg = "#89b4fa" }) -- Blue
+    vim.api.nvim_set_hl(0, "MiniStarterQuery", { fg = "#f38ba8" }) -- Pink
+    vim.api.nvim_set_hl(0, "MiniStarterFooter", { fg = "#a6e3a1" }) -- Green
   end,
 }
-

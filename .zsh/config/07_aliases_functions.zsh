@@ -44,6 +44,17 @@ function mkcd() {
   mkdir -p "$1" && cd "$1"
 }
 
+function docker() {
+  case $1 in
+    ps)
+      shift
+      command dops "$@"
+      ;;
+    *)
+      command docker "$@";;
+  esac
+}
+
 # Custom dotfiles git alias
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
