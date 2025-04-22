@@ -386,7 +386,7 @@ return {
                 "$FILENAME",
                 "--rules=@Symfony",
                 "--no-interaction",
-                "--quiet"
+                "--quiet",
               }
 
               -- Return the properly formatted arguments
@@ -493,8 +493,60 @@ return {
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
-
+      local kind_icons = {
+        Text = "",
+        Method = "",
+        Function = "󰊕",
+        Constructor = "",
+        Field = "",
+        Variable = "󰀫",
+        Class = "",
+        Interface = "",
+        Module = "",
+        Property = "",
+        Unit = "",
+        Value = "󰎠",
+        Enum = "",
+        Keyword = "󰌋",
+        Snippet = "",
+        Color = "",
+        File = "󰈙",
+        Reference = "",
+        Folder = "",
+        EnumMember = "",
+        Constant = "󰏿",
+        Struct = "󰙅",
+        Event = "",
+        Operator = "󰆕",
+        TypeParameter = "",
+      }
       cmp.setup({
+        formatting = {
+          format = function(entry, vim_item)
+            -- Add the icon before the kind
+            vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind] or "", vim_item.kind)
+            -- Optional: customize menu labels
+            vim_item.menu = ({
+              buffer = "[Buf]",
+              nvim_lsp = "[LSP]",
+              luasnip = "[Snip]",
+              path = "[Path]",
+              nvim_lua = "[Lua]",
+            })[entry.source.name]
+
+            return vim_item
+          end,
+        },
+        window = {
+          completion = cmp.config.window.bordered({
+            border = "rounded",
+            winhighlight = "Normal:CmpNormal,FloatBorder:CmpBorder,Search:None",
+          }),
+          documentation = cmp.config.window.bordered({
+            border = "rounded",
+            winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocBorder",
+          }),
+        },
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
