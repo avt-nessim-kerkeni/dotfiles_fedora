@@ -395,7 +395,10 @@ return {
             to_stdin = false, -- PHP CS Fixer doesn't support stdin processing
             to_temp_file = true, -- Write to a temp file since we're using $FILENAME
           }),
-          -- bash
+          null_ls.builtins.formatting.djlint.with({
+            filetypes = { "twig", "html", "htmldjango" },
+            extra_args = { "--profile=twig" },
+          }),
           null_ls.builtins.diagnostics.shellcheck.with({
             diagnostics_format = "[shellcheck] #{m} [#{c}]",
             extra_args = {
