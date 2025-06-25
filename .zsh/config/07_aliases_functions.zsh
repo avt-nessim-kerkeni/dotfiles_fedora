@@ -56,7 +56,21 @@ function docker() {
 }
 
 # Custom dotfiles git alias
+alias apprentim='/usr/bin/git --git-dir=$HOME/ApprenTIM_v_0/.git --work-tree=$HOME/ApprenTIM_v_0/'
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+function mktouch () {
+  mkdir -p "$(dirname "$1")" && touch "$1"
+}
+
+function curl() {
+  local response
+  response=$(command curl "$@")
+  if echo "$response" | jq . >/dev/null 2>&1; then
+    echo "$response" | jq
+  else
+    echo "$response"
+  fi
+}
 
 # Man pages with bat
 if command -v bat >/dev/null 2>&1; then

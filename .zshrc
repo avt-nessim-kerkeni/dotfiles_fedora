@@ -19,7 +19,7 @@ if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
   PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 export PATH
-
+export PATH=$PATH:/usr/local/go/bin
 # Load Cargo environment
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
 
@@ -32,7 +32,8 @@ plugins=(
   zsh-syntax-highlighting
   zsh-history-substring-search
   fzf
-)
+#   fzf-tab
+ )
 
 # Load configuration files
 for config_file in "$ZSH_CONFIG"/*.zsh; do

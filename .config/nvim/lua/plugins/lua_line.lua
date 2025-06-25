@@ -51,12 +51,14 @@ return {
 
 			local client_names = {}
 			for _, client in ipairs(clients) do
-				table.insert(client_names, client.name)
+				if client.name ~= "null-ls" then
+					table.insert(client_names, client.name)
+				end
 			end
 			return "  " .. table.concat(client_names, ", ")
 		end
 
----@diagnostic disable-next-line: undefined-field
+		---@diagnostic disable-next-line: undefined-field
 		require("lualine").setup({
 			options = {
 				icons_enabled = true,

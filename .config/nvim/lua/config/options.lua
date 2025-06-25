@@ -50,6 +50,7 @@ local function set_options()
 
 	-- Leader key
 	g.mapleader = " "
+  g.maplocalleader = ","
 	vim.diagnostic.config({
 		float = { wrap = true },
 	})

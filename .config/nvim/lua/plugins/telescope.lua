@@ -34,7 +34,7 @@ return {
             ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist, -- Send to Quickfix list
             ["<Esc>"] = actions.close,                                   -- Close Telescope
             ["<C-c>"] = actions.close,
-            ["<C-d>"] = actions.delete_buffer,
+            ["<C-w>"] = actions.delete_buffer,
           },
           n = {
             ["q"] = actions.close,

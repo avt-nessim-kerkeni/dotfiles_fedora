@@ -21,7 +21,6 @@ setopt LIST_PACKED           # Make completion lists more densely packed
 setopt MENU_COMPLETE         # Automatically select the first match
 
 # Completion styling with fat separators
-zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' special-dirs true

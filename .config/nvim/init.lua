@@ -20,6 +20,14 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "FocusGained" }, {
 	command = "checktime",
 })
 -- Add this to your Neovim config file
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "php",
+	callback = function()
+		vim.bo.shiftwidth = 4
+		vim.bo.softtabstop = 4
+		vim.bo.expandtab = true
+	end,
+})
 
 -- Create a Neovim command to display LSP environment info
 vim.api.nvim_create_user_command("PythonLSPInfo", function()
@@ -75,3 +83,15 @@ vim.api.nvim_create_user_command("PythonLSPInfo", function()
 		print("No Python LSP is active in this buffer.")
 	end
 end, {})
+
+vim.keymap.set("i", "<CR>", function()
+	local line = vim.api.nvim_get_current_line()
+	local col = vim.api.nvim_win_get_cursor(0)[2]
+	local char_after = line:sub(col + 1, col + 1)
+
+	if char_after:match("[%]%}%)]") then
+		return "<CR><ESC>O"
+	else
+		return "<CR>"
+	end
+end, { expr = true })
